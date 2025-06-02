@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import PasswordStrengthBar from '../../dist';
-import PasswordStrengthBar from 'react-password-strength-bar';
+import PasswordStrengthBar from 'reactjs-password-strength-bar';
 
 const styles = {
   wrap: {

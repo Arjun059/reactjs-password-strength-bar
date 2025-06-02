@@ -12,9 +12,9 @@
   "author": "arjun059",
   "license": "ISC",
   "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "reactjs-password-strength-bar": "1.0.0"  
+    "react": ">=16.8.6",
+    "react-dom": ">=16.8.6",
+    "reactjs-password-strength-bar": "1.0.1"
   },
   "devDependencies": {
     "babel-eslint": "10.1.0",

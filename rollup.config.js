@@ -1,33 +1,46 @@
 import typescript from 'rollup-plugin-typescript2';
-import external from 'rollup-plugin-peer-deps-external';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import replace from 'rollup-plugin-replace';
-import { uglify } from 'rollup-plugin-uglify';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import replace from '@rollup/plugin-replace';
+import { terser } from 'rollup-plugin-terser';
 
-import pkg from './package.json';
+import pkg from './package.json' assert { type: 'json' };
 
-module.exports = {
+export default {
   input: 'lib/index.tsx',
   output: {
     file: pkg.main,
-    format: 'cjs',
+    format: 'esm',
     exports: 'named',
     globals: {
       react: 'React',
     },
   },
   plugins: [
-    external(),
+    peerDepsExternal(),
     typescript({
-      rollupCommonJSResolveHack: true,
       clean: true,
     }),
     resolve(),
     commonjs(),
     replace({
-      ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+      preventAssignment: true,
+      values: {
+        ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+      },
     }),
-    process.env.NODE_ENV === 'production' && uglify(),
+    process.env.NODE_ENV === 'production' && terser(),
+    addUseClientDirective(),
   ],
 };
+
+function addUseClientDirective() {
+  return {
+    name: 'add-use-client',
+    renderChunk(code) {
+      if (code.includes('"use client"')) return code; // already present
+      return `"use client";\n${code}`;
+    },
+  };
+}

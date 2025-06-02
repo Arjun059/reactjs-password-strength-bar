@@ -1,4 +1,4 @@
-import React, { Fragment, CSSProperties, ReactNode } from 'react';
+import React, {Fragment, CSSProperties, ReactNode, useState, useEffect, ComponentProps} from 'react';
 import zxcvbn from 'zxcvbn';
 
 // components
@@ -9,14 +9,10 @@ export interface PasswordFeedback {
   suggestions?: string[];
 }
 
-interface PasswordStrengthBarState {
-  score: number;
-}
-
 export interface PasswordStrengthBarProps {
-  className?: string;
+  className?: ComponentProps<"div">['className'];
   style?: CSSProperties;
-  scoreWordClassName?: string;
+  scoreWordClassName?: ComponentProps<"p">['className'];
   scoreWordStyle?: CSSProperties;
   password: string;
   userInputs?: string[];
@@ -25,7 +21,7 @@ export interface PasswordStrengthBarProps {
   minLength?: number;
   shortScoreWord?: ReactNode;
   onChangeScore?: (
-    score: PasswordStrengthBarState['score'],
+    score: number,
     feedback: PasswordFeedback,
   ) => void;
 }
@@ -51,95 +47,84 @@ const descStyle: CSSProperties = {
   textAlign: 'right',
 };
 
-class PasswordStrengthBar extends React.Component<
-  PasswordStrengthBarProps,
-  PasswordStrengthBarState
-> {
-  public static defaultProps: PasswordStrengthBarProps = {
-    className: undefined,
-    style: undefined,
-    scoreWordClassName: undefined,
-    scoreWordStyle: undefined,
-    password: '',
-    userInputs: [],
-    barColors: ['#ddd', '#ef4836', '#f6b44d', '#2b90ef', '#25c281'],
-    scoreWords: ['weak', 'weak', 'okay', 'good', 'strong'],
-    minLength: 4,
-    shortScoreWord: 'too short',
-    onChangeScore: undefined,
-  };
+const defaultProps: Partial<PasswordStrengthBarProps> = {
+  className: undefined,
+  style: undefined,
+  scoreWordClassName: undefined,
+  scoreWordStyle: undefined,
+  password: '',
+  userInputs: [],
+  barColors: ['#ddd', '#ef4836', '#f6b44d', '#2b90ef', '#25c281'],
+  scoreWords: ['weak', 'weak', 'okay', 'good', 'strong'],
+  minLength: 4,
+  shortScoreWord: 'too short',
+  onChangeScore: undefined,
+};
 
-  public state = {
-    score: 0,
-  };
+const PasswordStrengthBar: React.FC<PasswordStrengthBarProps> = (props) => {
+  const {
+    className,
+    style,
+    scoreWordClassName,
+    scoreWordStyle,
+    password,
+    barColors = defaultProps.barColors,
+    scoreWords = defaultProps.scoreWords,
+    minLength = defaultProps.minLength,
+    shortScoreWord = defaultProps.shortScoreWord,
+    userInputs = defaultProps.userInputs,
+    onChangeScore,
+  } = props;
 
-  public componentDidMount(): void {
-    this.setScore();
-  }
+  const [score, setScore] = useState(0);
 
-  public componentDidUpdate(prevProps: PasswordStrengthBarProps): void {
-    const { password } = this.props;
-    if (prevProps.password !== password) {
-      this.setScore();
-    }
-  }
-
-  private setScore = (): void => {
-    const { password, minLength, userInputs, onChangeScore } = this.props;
+  const calculateScore = (): void => {
     let result = null;
-    let score = 0;
+    let newScore = 0;
     let feedback: PasswordFeedback = {};
+
     if (password.length >= minLength) {
       result = zxcvbn(password, userInputs);
-      ({ score, feedback } = result);
+      ({score: newScore, feedback} = result);
+
+      // some times password length is greater than minLength but score is 0
+      // the behavior is comes from zxcvbn library
+      if (newScore === 0) {
+        newScore = 1;
+      }
     }
-    this.setState(
-      {
-        score,
-      },
-      () => {
-        if (onChangeScore) {
-          onChangeScore(score, feedback);
-        }
-      },
-    );
+
+    setScore(newScore);
+    if (onChangeScore) {
+      onChangeScore(newScore, feedback);
+    }
   };
 
-  public render(): ReactNode {
-    const {
-      className,
-      style,
-      scoreWordClassName,
-      scoreWordStyle,
-      password,
-      barColors,
-      scoreWords,
-      minLength,
-      shortScoreWord,
-    } = this.props;
-    const { score } = this.state;
-    const newShortScoreWord =
-      password.length >= minLength ? scoreWords[score] : shortScoreWord;
+  useEffect(() => {
+    calculateScore();
+  }, [password, minLength, userInputs]);
 
-    return (
-      <div className={className} style={{ ...rootStyle, ...style }}>
-        <div style={wrapStyle}>
-          {[1, 2, 3, 4].map((el: number) => (
-            <Fragment key={`password-strength-bar-item-${el}`}>
-              {el > 1 && <div style={spaceStyle} />}
-              <Item score={score} itemNum={el} barColors={barColors} />
-            </Fragment>
-          ))}
-        </div>
-        <p
-          className={scoreWordClassName}
-          style={{ ...descStyle, ...scoreWordStyle }}
-        >
-          {newShortScoreWord}
-        </p>
+  const newShortScoreWord =
+    password.length >= minLength ? scoreWords[score] : shortScoreWord;
+
+  return (
+    <div className={className} style={{...rootStyle, ...style}}>
+      <div style={wrapStyle}>
+        {[1, 2, 3, 4].map((el: number) => (
+          <Fragment key={`password-strength-bar-item-${el}`}>
+            {el > 1 && <div style={spaceStyle} />}
+            <Item score={score} itemNum={el} barColors={barColors} />
+          </Fragment>
+        ))}
       </div>
-    );
-  }
-}
+      <p
+        className={scoreWordClassName}
+        style={{...descStyle, ...scoreWordStyle}}
+      >
+        {newShortScoreWord}
+      </p>
+    </div>
+  );
+};
 
 export default PasswordStrengthBar;

@@ -1,38 +1,37 @@
-# react-password-strength-bar
-> [DEPRECATED] This repository will no longer be updated.
+# reactjs-password-strength-bar
 
 A React component that displays the password strength bar
 
-[![NPM](https://nodei.co/npm/react-password-strength-bar.png?compact=true)](https://nodei.co/npm/react-password-strength-bar/)
+[![NPM](https://nodei.co/npm/reactjs-password-strength-bar.png?compact=true)](https://nodei.co/npm/reactjs-password-strength-bar/)
 
 [![Version](https://img.shields.io/npm/v/react-password-strength-bar.svg)](https://www.npmjs.com/package/react-password-strength-bar)
 [![Build](https://travis-ci.org/lannex/react-password-strength-bar.svg?branch=master)](https://www.npmjs.com/package/react-password-strength-bar)
 [![Coverage Status](https://coveralls.io/repos/github/lannex/react-password-strength-bar/badge.svg?branch=master)](https://coveralls.io/github/lannex/react-password-strength-bar?branch=master)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![License](https://img.shields.io/npm/l/react-password-strength-bar.svg)](https://www.npmjs.com/package/react-password-strength-bar)
+[![License](https://img.shields.io/npm/l/react-password-strength-bar.svg)](https://www.npmjs.com/package/reactjs-password-strength-bar)
 
 ![Gif](./examples/static/example.gif)
 
 ## Note
+- Next Js Support.
 - This package is based on [zxcvbn](https://github.com/dropbox/zxcvbn).
 `zxcvbn` is a powerful library, but its size is very large.
-I recommend you use this package by [Code-Splitting](https://reactjs.org/docs/code-splitting.html).
 - The input tag is not included.
-If you want to include the input tag, use the [mmw/react-password-strength](https://github.com/mmw/react-password-strength) package.
+
 
 ## Install
 ```
-$ npm install react-password-strength-bar
+$ npm install reactjs-password-strength-bar
 ```
 ```
-$ yarn add react-password-strength-bar
+$ yarn add reactjs-password-strength-bar
 ```
 
 ## Usage
 ```js
-import PasswordStrengthBar from 'react-password-strength-bar';
+import PasswordStrengthBar from 'reactjs-password-strength-bar';
 
-const { password } = this.state;
+const [password, setPassword] = useSate('');
 <PasswordStrengthBar password={password} />
 ```
 

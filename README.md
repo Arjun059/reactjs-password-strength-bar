@@ -19,6 +19,7 @@ A React component that displays the password strength bar
 - The input tag is not included.
 - Actively maintained.
 
+[![Edit on CodeSandbox](https://img.shields.io/badge/Edit%20on-CodeSandbox-151515?logo=codesandbox&logoColor=white)](https://codesandbox.io/p/sandbox/agitated-thompson-kr7cts)
 
 ## Install
 ```

@@ -17,6 +17,7 @@ A React component that displays the password strength bar
 - This package is based on [zxcvbn](https://github.com/dropbox/zxcvbn).
 `zxcvbn` is a powerful library, but its size is very large.
 - The input tag is not included.
+- Actively maintained.
 
 
 ## Install

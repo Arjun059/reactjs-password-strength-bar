@@ -14,10 +14,11 @@ A React component that displays the password strength bar
 
 ## Note
 - Next Js Support.
-- This package is based on [zxcvbn](https://github.com/dropbox/zxcvbn).
-`zxcvbn` is a powerful library, but its size is very large.
-- The input tag is not included.
 - Actively maintained.
+- This package is based on [zxcvbn](https://github.com/dropbox/zxcvbn).
+`zxcvbn` is a powerful library.
+- The input tag is not included.
+
 
 [![Edit on CodeSandbox](https://img.shields.io/badge/Edit%20on-CodeSandbox-151515?logo=codesandbox&logoColor=white)](https://codesandbox.io/p/sandbox/agitated-thompson-kr7cts)
 
